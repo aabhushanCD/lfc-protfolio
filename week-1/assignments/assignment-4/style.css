@@ -1,0 +1,100 @@
+.product-container {
+  display: flex;
+
+  flex-wrap: wrap;
+  margin: auto;
+  gap: 8px;
+}
+
+.product-section {
+  width: 85%;
+  margin: auto;
+  padding-top: 20px;
+}
+
+.promo-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.product-card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 16px;
+  width: 200px;
+  text-align: center;
+
+  margin-top: 10px;
+}
+
+.product-card button:hover {
+  animation: effect 0.3s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+.product-card img {
+  border: 1px solid #ccc;
+  width: 100%;
+  object-fit: cover;
+  height: 200px;
+  border-radius: 5px;
+}
+.product-card h3 {
+  margin: 10px 0;
+  font-family: cursive;
+}
+.product-card p {
+  margin: 10px 0;
+  font-family: cursive;
+  font-size: 14px;
+  color: gray;
+}
+
+.product-card button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+@keyframes effect {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+    background: yellowgreen;
+    cursor: pointer;
+    color: white;
+    box-shadow: drop-shadow(0px 4px 8px rgba(1, 1, 1, 0.2));
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.promo-loader {
+  /* position: absolute;
+  top: 50%;
+  left: 50%; */
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: auto;
+  margin-top: 20px;
+}
