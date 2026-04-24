@@ -1,0 +1,60 @@
+.carousel-wrap {
+  position: relative;
+  width: 100%;
+  margin: auto;
+
+  background-color: rgb(28, 33, 32);
+  padding: 10px 20px;
+  text-align:center;
+  color:rgba(255, 255, 255, 0.485);
+}
+
+.carousel {
+  width: 800px;
+  height: 400px;
+  margin: auto;
+  overflow: hidden;
+  /* border: 1px solid black; */
+}
+
+.slides img {
+  width: 800px;
+  object-fit: cover;
+}
+.slides {
+  display: flex;
+  width: max-content;
+  animation: slide 6s ease-in-out infinite;
+}
+.controls {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+.slides:hover {
+  animation-play-state: paused;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  33.333% {
+    transform: translateX(0);
+  }
+  44.444% {
+    transform: translateX(-33.333%);
+  }
+  77.777% {
+    transform: translateX(-33.333%);
+  }
+  88.888% {
+    transform: translateX(-66.666%);
+  }
+  100% {
+    transform: translateX(-66.666%);
+  }
+}
