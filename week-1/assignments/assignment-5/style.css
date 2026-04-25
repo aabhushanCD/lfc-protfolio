@@ -19,7 +19,7 @@ header {
 main {
   grid-area: main;
   padding: 20px;
-}
+} 
 
 .shop-sidebar {
   grid-area: sidebar;
