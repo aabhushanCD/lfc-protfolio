@@ -73,6 +73,8 @@ a {
   padding: 40px 20px;
 }
 .contact-info {
+  margin:auto;
+  max-width: 600px; 
   background-color: #f9f9f9;
   padding: 20px;
   border-radius: 8px;
