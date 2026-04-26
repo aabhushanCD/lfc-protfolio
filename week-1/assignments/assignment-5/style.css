@@ -19,7 +19,7 @@ header {
 main {
   grid-area: main;
   padding: 20px;
-} 
+}
 
 .shop-sidebar {
   grid-area: sidebar;
@@ -84,4 +84,16 @@ main {
   outline: none;
   background-color: transparent;
   border: none;
+}
+
+@media (max-width: 768px) {
+  body {
+    grid-template-areas:
+      "header"
+      "sidebar"
+      "main"
+      "footer";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto auto;
+  }
 }
