@@ -15,18 +15,24 @@ type WeatherData = {
     speed: number;
   };
 };
+type statusType = {
+  type: "idle" | "loading" | "success" | "error";
+  message?: string;
+};
 
 function App() {
   const apiKey = import.meta.env.VITE_API_KEY;
 
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [city, setCity] = useState<string>("");
-  const [status, setStatus] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [status, setStatus] = useState<statusType>({ type: "idle" });
   const handleSubmit = async () => {
     try {
-      setStatus("");
-      setLoading(true);
+      if (!city.trim()) {
+        setStatus({ type: "error", message: "Please enter a city name" });
+        return;
+      }
+      setStatus({ type: "loading" });
       if (!city) {
         return;
       }
@@ -34,17 +40,16 @@ function App() {
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`,
       );
       if (!response.ok) {
-        setStatus("error");
+        setStatus({ type: "error", message: "City not found" });
         return;
       }
       const data = await response.json();
       setWeather(data);
-      setStatus("success");
+      setStatus({ type: "success" });
     } catch (error) {
       console.log(error);
-      setStatus("error");
+      setStatus({ type: "error", message: "An error occurred" });
     } finally {
-      setLoading(false);
       setCity("");
     }
   };
@@ -56,9 +61,9 @@ function App() {
 
         <SearchForm city={city} setCity={setCity} handleSubmit={handleSubmit} />
 
-        {loading && <p className="status" id="loading"></p>}
+        {status.type === "loading" && <p className="status" id="loading"></p>}
 
-        {weather && status === "success" && (
+        {weather && status.type === "success" && (
           <div className="weather-info">
             {weather && (
               <img
@@ -80,7 +85,7 @@ function App() {
           </div>
         )}
 
-        {status === "error" && <p className="error">City not found </p>}
+        {status.type === "error" && <p className="error">{status.message}</p>}
       </div>
     </div>
   );
