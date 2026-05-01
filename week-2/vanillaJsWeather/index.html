@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather-app</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="../../public/humidity.png" />
+  </head>
+  <body>
+    <header class="head">
+      <div class="location-box">
+        <img src="../../public/location.png" alt="location" width="20px" />
+        <p for="country-input" id="location-name">Location</p>
+      </div>
+      <div class="search-box">
+        <img src="../../public/search.png" alt="search" width="20px" />
+        <input type="text" id="city-input" placeholder="Enter country name" />
+        <button id="search-btm" type="submit">Get Weather</button>
+      </div>
+    </header>
+    <main class="app">
+      <h2>CURRENT WEATHER</h2>
+      <div class="weather-metric">
+        <div class="weather-icon">
+          <p id="temperature"></p>
+          <img
+            id="weather-icon"
+            src="https://openweathermap.org/payload/api/media/file/10d@2x.png"
+            alt="Weather icon"
+            width="160px"
+          />
+        </div>
+        <p id="weather-description">Today Weather!</p>
+      </div>
+      <div class="metrix-container">
+        <span class="metrix-value">
+          <img
+            src="../../public/windy.png"
+            alt="Wind speed icon"
+            width="20px"
+          />
+          <span id="metric-wind-speed" aria-label="wind-speed">0 m/s</span>
+        </span>
+        <span class="metrix-value">
+          <img
+            src="../../public/humidity.png"
+            alt="Humidity icon"
+            width="20px"
+          />
+          <span id="metric-humidity" aria-label="humidity">0%</span>
+        </span>
+      </div>
+      <p id="status"></p>
+      <div id="loading"></div>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
