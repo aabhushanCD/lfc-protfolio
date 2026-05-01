@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "./App.css";
 import SearchForm from "./components/SearchForm";
-
 type WeatherData = {
   name: string;
   main: {
@@ -30,7 +29,10 @@ function App() {
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`,
       );
-
+      if (!response.ok) {
+        setStatus("error");
+        return;
+      }
       const data = await response.json();
       setWeather(data);
       setStatus("success");
@@ -47,10 +49,17 @@ function App() {
 
         <SearchForm city={city} setCity={setCity} handleSubmit={handleSubmit} />
 
-        {status === "loading" && <p className="status">Loading...</p>}
+        {status === "loading" && <p className="status" id="loading"></p>}
 
-        {weather && status === "success" && (
+        {weather && status === "success" && ( 
           <div className="weather-info">
+            {weather && (
+              <img
+                src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
+                alt={weather.weather[0].description}
+                width={100}
+              />
+            )}
             <h2 className="city">{weather.name}</h2>
 
             <div className="temp">{Math.round(weather.main.temp)}°C</div>
@@ -64,7 +73,7 @@ function App() {
           </div>
         )}
 
-        {status === "error" && <p className="error">City not found 😢</p>}
+        {status === "error" && <p className="error">City not found </p>}
       </div>
     </div>
   );

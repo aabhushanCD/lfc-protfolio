@@ -70,3 +70,51 @@ body {
   color: red;
   margin-top: 10px;
 }
+
+.search-box {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+input {
+  width: 100%;
+  padding: 5px;
+  border: 0;
+  background: white;
+  border-radius: 5px;
+  outline: none;
+}
+
+button {
+  padding: 5px 10px;
+  margin-left: 10px;
+  border: none;
+  background: #3498db;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#loading {
+  margin: 15px auto;
+  color: #555;
+  width: 20px;
+  height: 20px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

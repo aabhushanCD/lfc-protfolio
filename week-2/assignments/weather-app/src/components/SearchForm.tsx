@@ -1,3 +1,5 @@
+import search from "../../../../../public/search.png";
+
 type Props = {
   city: string;
   setCity: (value: string) => void;
@@ -6,8 +8,8 @@ type Props = {
 
 const SearchForm = ({ city, setCity, handleSubmit }: Props) => {
   return (
-    <div>
-      <label>Search:</label>
+    <div className="search-box">
+      <img src={search} alt="Search" width={20} height={20} />
       <input
         type="text"
         placeholder="Enter Your city"
