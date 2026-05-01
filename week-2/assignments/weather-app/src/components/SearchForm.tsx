@@ -15,6 +15,11 @@ const SearchForm = ({ city, setCity, handleSubmit }: Props) => {
         placeholder="Enter Your city"
         value={city}
         onChange={(e) => setCity(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleSubmit();
+          }
+        }}
       />
       <button onClick={handleSubmit}>Submit</button>
     </div>

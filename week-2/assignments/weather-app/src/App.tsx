@@ -22,10 +22,14 @@ function App() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [city, setCity] = useState<string>("");
   const [status, setStatus] = useState<string>("");
-
+  const [loading, setLoading] = useState<boolean>(false);
   const handleSubmit = async () => {
     try {
-      setStatus("loading");
+      setStatus("");
+      setLoading(true);
+      if (!city) {
+        return;
+      }
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`,
       );
@@ -39,6 +43,9 @@ function App() {
     } catch (error) {
       console.log(error);
       setStatus("error");
+    } finally {
+      setLoading(false);
+      setCity("");
     }
   };
 
@@ -49,9 +56,9 @@ function App() {
 
         <SearchForm city={city} setCity={setCity} handleSubmit={handleSubmit} />
 
-        {status === "loading" && <p className="status" id="loading"></p>}
+        {loading && <p className="status" id="loading"></p>}
 
-        {weather && status === "success" && ( 
+        {weather && status === "success" && (
           <div className="weather-info">
             {weather && (
               <img
