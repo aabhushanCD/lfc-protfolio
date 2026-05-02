@@ -3,7 +3,7 @@ let cityInput = document.getElementById("city-input");
 let statusEl = document.getElementById("status");
 let weatherResult = document.getElementById("weather-result");
 let loading = document.getElementById("loading");
-const API_KEY = "f011c8481591a4c6f1f9fd818f62e38c";
+const API_KEY = "api-key-goes-here";
 const baseUrl = "https://api.openweathermap.org/data/2.5/weather";
 
 async function featherWeather(city) {
