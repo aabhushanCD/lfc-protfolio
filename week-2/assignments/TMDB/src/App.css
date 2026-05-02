@@ -8,9 +8,11 @@
   background: black;
   color: white;
   border-bottom: 2px solid gray;
+
   h1 {
     color: red;
   }
+
   .navs-btms {
     display: flex;
     gap: 16px;
@@ -18,13 +20,15 @@
     .nav-btm {
       display: flex;
       flex-direction: column;
+
+      .highlight {
+        color: white;
+      }
     }
     .nav-underline {
       border: 3px solid rgb(225, 6, 6);
     }
-    .highlight {
-      color: white;
-    }
+
     a {
       text-decoration: none;
       color: gray;
@@ -55,6 +59,19 @@
     gap: 24px;
     color: white;
   }
+
+  @media (max-width: 1200px) {
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 10px 0;
+    .search {
+      width: 90%;
+      padding: 16px 16px;
+    }
+    .notify-profile {
+      display: none;
+    }
+  }
 }
 
 .movie-card {
@@ -69,7 +86,6 @@
     position: relative;
     width: 100%;
     height: 300px;
-    object-fit: cover;
     border-radius: 6px;
 
     .play-btm {
@@ -78,7 +94,8 @@
       transition: 0.3s;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%) scale(0.8);
+      transition: 0.3s;
       width: 50px;
       height: 50px;
       border-radius: 50%;
@@ -119,16 +136,57 @@
     }
     .play-btm {
       background: rgb(255, 183, 0);
+      transform: translate(-50%, -50%) scale(1);
       opacity: 1;
     }
+  }
+  @media (max-width: 1200px) {
+    width: 190px;
   }
 }
 
 .movies-container-grid {
-  margin: 10px auto;
+  margin: 20px auto;
   display: grid;
-  width: 1110px;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  justify-content: center;
+  max-width: 1200px;
+  padding: 0 20px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+  }
+}
+
+.movie-container-header {
+  display: flex;
+  margin: auto;
+  justify-content: space-between;
+  width: 1200px;
+
+  .movie-explore {
+    width: 40%;
+  }
+  .movie-container-btms {
+    display: flex;
+    gap: 16px;
+    height: 40px;
+    align-self: flex-end;
+
+    button {
+      border-radius: 16px;
+      background: none;
+      padding: 4px 16px;
+
+      &:hover {
+        color: yellow;
+        border: 1px solid yellow;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      display: none;
+    }
+  }
 }
