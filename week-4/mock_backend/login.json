@@ -1,0 +1,11 @@
+{
+  "login": [
+    {
+      "id": 1,
+      "accessToken": "123456789",
+      "refreshToken": "987654321",
+      "username": "admin",
+      "password": "admin123"
+    }
+  ]
+}
