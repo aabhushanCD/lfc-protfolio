@@ -1,4 +1,4 @@
-State management Decision
+<!-- State management Decision -->
 
 Context API
 
@@ -13,4 +13,34 @@ Local Component State
 UI-specific state such as modal visibility, search inputs, temporary filters, and form drafts remaining inside components using useState. These values are not shared globally and keeping then local reduces unnecessary re-renders and complexity.
 
 Derived State
+
 The application computes the upomming meetings counts from the meeting collection instead of storing it separately. This avoid duplicated state and ensure the value is always accurate.
+
+<!-- Docker setup for development -->
+
+FROM node:22-alpine
+
+WORKDIR /app
+
+COPY package\*.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev","--", "--host"]
+
+
+<!-- Cmd to build and run docker -->
+
+docker build -t my-react-app .
+docker run -p 5173:5173 my-react-app
+
+
+<!-- Netlify Deployment with fallback -->
+
+https://meetingbasum.netlify.app/
+
+
