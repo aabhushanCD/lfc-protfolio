@@ -21,6 +21,12 @@ const useMeetingStore = create(
         host: "John Doe",
         date: "2026/06/17 10:00:00",
       },
+      {
+        id: 4,
+        title: "Team Sync-Up",
+        host: "John Doe",
+        date: "2026/06/01 10:00:00",
+      },
     ],
 
     addMeeting: (meeting) =>

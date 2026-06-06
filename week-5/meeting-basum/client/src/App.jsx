@@ -4,6 +4,9 @@ import { Video } from "lucide-react";
 import UpcommingCard from "./components/UpcommingCard";
 import { useMeetingStore } from "./store/useMeeting";
 import { useSession } from "./context/SessionContext";
+import { useState } from "react";
+import { useSelector } from "./selectors/useSelector";
+import Button from "./components/ui/Button";
 
 const stats = [
   {
@@ -30,10 +33,19 @@ const stats = [
 ];
 
 function App() {
-  const meetings = useMeetingStore((state) => state.meetings);
+  const [filter, setFilter] = useState("all");
   const meetingsCount = useMeetingStore((state) =>
     state.upComingMeetingsCount(),
   );
+
+  const { todayMeetings, hostedBy, upComingMeetings } = useSelector();
+
+  const filteredMeetings =
+    filter === "today"
+      ? todayMeetings
+      : filter === "hosted"
+        ? hostedBy(user.name)
+        : upComingMeetings;
   const { user, theme } = useSession();
   return (
     <div
@@ -65,9 +77,30 @@ function App() {
           gap: 8,
         }}
       >
-        <h3>Upcomming Meetings : {meetingsCount}</h3>
-        {meetings.map((stats) => (
-          <UpcommingCard stats={stats} key={stats.id} />
+        <h3>Upcoming Meetings: {meetingsCount}</h3>
+
+        <div style={{ display: "flex", gap: 8 }}>
+          {[
+            { label: "Upcoming", value: "all" },
+            { label: "Today", value: "today" },
+            { label: "Hosted", value: "hosted" },
+          ].map(({ label, value }) => (
+            <Button
+              key={value}
+              onClick={() => setFilter(value)}
+              style={{
+                fontWeight: filter === value ? "bold" : "normal",
+                borderBottom:
+                  filter === value ? "2px solid currentColor" : "none",
+              }}
+            >
+              {label}
+            </Button>
+          ))}
+        </div>
+
+        {filteredMeetings.map((meeting) => (
+          <UpcommingCard stats={meeting} key={meeting.id} />
         ))}
       </section>
     </div>
