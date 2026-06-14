@@ -7,11 +7,18 @@ import {
   getTodoByQuery,
   updateTodo,
 } from "./todo.service.ts";
-import { errorHandler } from "../../middleware/errorHandler.ts";
+import { errorHandler } from "../../shared/errors/errorHandler.ts";
+import { getCache, setCache } from "../../cache/cache.service.ts";
 
 export const getTodos = async (req: Request, res: Response) => {
   try {
+    const CACHE_TTL = 300;
+    const cachedTodos = await getCache("todos");
+    if (cachedTodos) {
+      return res.json(cachedTodos);
+    }
     const data = await getTodo();
+    await setCache("todos", data, CACHE_TTL);
     res.json({ message: "This is the list of todos", data });
   } catch (error) {
     return errorHandler(error, req, res);

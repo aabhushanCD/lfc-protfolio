@@ -10,7 +10,7 @@ export const login = async (
 ) => {
   try {
     const user = await getUser(req.body);
-    const token = generateToken(user._id.toString(), user.email);
+    const token = generateToken(user._id.toString(), user.email, user.role);
 
     res.cookie("accessToken", token, {
       httpOnly: true,

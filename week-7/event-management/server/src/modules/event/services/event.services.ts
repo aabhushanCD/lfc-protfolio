@@ -1,3 +1,5 @@
+import { delCache, getCache, setCache } from "../../../cache/redis.cache.ts";
+import { eventQueue } from "../../../queues/event.queue.ts";
 import { AppError } from "../../../shared/utils/error.ts";
 import { Event } from "../model/event.model.ts";
 import { CreateEventDto } from "../schema/createEvent.schema.ts";
@@ -11,16 +13,25 @@ export const createEvent = async (
     ...data,
     createdBy: organizerId,
   });
+  await delCache("events");
 
   return event;
 };
 
 export const getPublishedEvents = async () => {
+  const cached = await getCache("events");
+  if (cached) {
+    console.log("CACHED HIT");
+    return cached;
+  }
+  console.log("CACHED MISS");
   const events = await Event.find({
     status: "published",
   })
     .populate("createdBy", "name email")
     .sort({ createdAt: -1 });
+
+  await setCache("events", events, 300);
 
   return events;
 };
@@ -53,7 +64,7 @@ export const updateEvent = async (
   Object.assign(event, data);
 
   await event.save();
-
+  await delCache("events");
   return event;
 };
 
@@ -69,7 +80,7 @@ export const deleteEvent = async (id: any, organizerId: string) => {
   }
 
   await event.deleteOne();
-
+  await delCache("events");
   return {
     message: "Event deleted successfully",
   };
@@ -93,7 +104,11 @@ export const publishEvent = async (id: any, organizerId: string) => {
   event.status = "published";
 
   await event.save();
-
+  await delCache("events");
+  await eventQueue.add("notify-subscribers", {
+    eventId: event._id,
+    title: event.title,
+  });
   return event;
 };
 
@@ -115,6 +130,6 @@ export const uploadBanner = async (
   event.bannerUrl = filePath;
 
   await event.save();
-
+  await delCache("events");
   return event;
 };

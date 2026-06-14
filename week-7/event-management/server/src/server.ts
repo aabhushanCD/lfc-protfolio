@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 
 import connectDB from "./config/db.ts";
 import { authRoutes } from "./modules/auth/routes/auth.routes.ts";
+import eventRoute from "./modules/event/routes/event.routes.ts";
 import { Request, Response, NextFunction } from "express";
 import { errorHandler } from "./shared/utils/errorHandler.ts";
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/event", eventRoute);
 app.get("/health", () => {
   console.log("Server is Healthy");
 });
