@@ -7,13 +7,14 @@ import {
   getTodoByIds,
   getTodoByQuerys,
   getTodos,
+  toggleComplete,
   updateTodos,
 } from "./todo.controller.ts";
 import { verifyToken } from "../../middleware/verifyToken.ts";
 
 const router = express.Router();
 
-router.get("/", validate(createTodoSchema), getTodos);
+router.get("/", verifyToken, getTodos);
 
 router.get("/search", getTodoByQuerys);
 router.get("/:id", validate(createTodoSchema), getTodoByIds);
@@ -24,4 +25,5 @@ router.put("/:id", validate(createTodoSchema), verifyToken, updateTodos);
 
 router.delete("/:id", verifyToken, deleteTodos);
 
+router.patch("/:id", verifyToken, toggleComplete);
 export default router;

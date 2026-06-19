@@ -19,7 +19,7 @@ export const getTodos = async (req: Request, res: Response) => {
     }
     const data = await getTodo();
     await setCache("todos", data, CACHE_TTL);
-    res.json({ message: "This is the list of todos", data });
+    return res.json(data);
   } catch (error) {
     return errorHandler(error, req, res);
   }
@@ -72,6 +72,19 @@ export const getTodoByQuerys = async (req: Request, res: Response) => {
     const { completed } = req.query;
     const todos = await getTodoByQuery(completed === "true");
     res.json({ message: "Todos fetched successfully", data: todos });
+  } catch (error) {
+    return errorHandler(error, req, res);
+  }
+};
+
+export const toggleComplete = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id as string;
+    const updatedTodo = await updateTodo(id, { completed: req.body.completed });
+    res.json({
+      message: "Todo completion toggled successfully",
+      data: updatedTodo,
+    });
   } catch (error) {
     return errorHandler(error, req, res);
   }

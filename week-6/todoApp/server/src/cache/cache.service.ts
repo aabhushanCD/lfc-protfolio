@@ -7,3 +7,7 @@ export const getCache = async (key: string) => {
   const value = await redis.get(key);
   return value ? JSON.parse(value) : null;
 };
+
+export const deleteCache = async (key: string) => {
+  await redis.del(key);
+};

@@ -1,8 +1,10 @@
 import bcrypt from "bcrypt";
 
 import { Auth } from "./model/auth.model.ts";
+import { LoginAuthInput } from "./schema/loginAuthSchema.ts";
+import { CreateAuthInput } from "./schema/auth.schema.ts";
 
-export const signup = async ({ email, name, password }) => {
+export const signup = async ({ email, name, password }: CreateAuthInput) => {
   const existingUser = await Auth.findOne({ email });
   if (existingUser) {
     throw new Error("Email already in use");
@@ -12,12 +14,14 @@ export const signup = async ({ email, name, password }) => {
   return await newUser.save();
 };
 
-export const login = async ({ email, password }) => {
-  console.log(email, password);
+export const login = async ({ email, password }: LoginAuthInput) => {
   const user = await Auth.findOne({ email });
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (isMatch) {
-    return user;
+  if (!user) {
+    throw new Error("Invalid credentials");
   }
-  return;
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    throw new Error("Invalid credentials");
+  }
+  return user;
 };

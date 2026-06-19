@@ -7,13 +7,7 @@ export const verifyToken = (
   next: NextFunction,
 ) => {
   try {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader) {
-      return res.status(401).json({ message: "Token not provided" });
-    }
-
-    const token = authHeader.split(" ")[1]; // "Bearer token"
+    const token = req.cookies.token;
 
     if (!token) {
       return res.status(401).json({ message: "Invalid token format" });
@@ -25,6 +19,7 @@ export const verifyToken = (
 
     next();
   } catch (error) {
+    console.log(error);
     return res.status(401).json({ message: "Unauthorized" });
   }
 };
