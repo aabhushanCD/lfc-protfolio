@@ -2,8 +2,9 @@ import { BrowserRouter, Route, Routes } from "react-router";
 
 import Register from "../pages/Register";
 import Login from "../pages/login";
-import App from "../App";
+
 import ProtectedRoute from "./ProtectedRoute";
+import TodoContainer from "../components/TodoContainer";
 
 const AppRoute = () => {
   return (
@@ -12,7 +13,7 @@ const AppRoute = () => {
         <Route path="/sign-up" element={<Register />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<App />}></Route>
+          <Route path="/" element={<TodoContainer />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>

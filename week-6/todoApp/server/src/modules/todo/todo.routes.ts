@@ -17,7 +17,7 @@ const router = express.Router();
 router.get("/", verifyToken, getTodos);
 
 router.get("/search", getTodoByQuerys);
-router.get("/:id", validate(createTodoSchema), getTodoByIds);
+router.get("/:id", getTodoByIds);
 
 router.post("/", validate(createTodoSchema), verifyToken, createTodos);
 

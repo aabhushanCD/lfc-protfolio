@@ -2,7 +2,7 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 import type { IAuthContextType, Status } from "../types/authContext.type";
 import type { IUser } from "../types/user.type";
 import { axiosInstance } from "../api/fetch";
-import { loginApi } from "../api/auth";
+import { loginApi, signupApi } from "../api/auth";
 import type { LoginSchemaType } from "../schema/LoginSchema";
 
 type AuthProviderProps = {
@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       : null,
   );
 
-
   const login = async (userData: LoginSchemaType) => {
     try {
       setStatus("loading");
@@ -27,7 +26,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         userData as { email: string; password: string },
       );
       localStorage.setItem("currentUser", JSON.stringify(data));
-  
     } catch (error) {
       console.error(error);
       setStatus("error");
@@ -39,9 +37,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signup = async (userData: IUser) => {
     try {
       setStatus("loading");
-      const response = await axiosInstance.post("/auth/signup", userData);
-      setCurrentUser(response.data.data);
-      localStorage.setItem("currentUser", JSON.stringify(response.data.data));
+      await signupApi(userData);
     } catch (error) {
       console.error(error);
       setStatus("error");
