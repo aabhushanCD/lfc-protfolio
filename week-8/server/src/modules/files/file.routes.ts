@@ -1,14 +1,10 @@
 import { Router } from "express";
 
-import multer from "multer";
-import { uploadFile } from "./files.controller.ts";
+import { getUrl, uploadFile } from "./files.controller.ts";
+import { fileUpload } from "../../middleware/upload.middleware.ts";
 
 const router = Router();
 
-const upload = multer({
-  dest: "uploads/files",
-});
-
-router.post("/", upload.single("file"), uploadFile);
-
+router.post("/", fileUpload.single("file"), uploadFile);
+router.get("/", getUrl);
 export default router;

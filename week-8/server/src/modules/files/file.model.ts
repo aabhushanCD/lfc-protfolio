@@ -2,15 +2,18 @@ import { Schema, model } from "mongoose";
 
 const fileSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
     originalName: {
       type: String,
       required: true,
     },
-
+    objectKey: {
+      type: String,
+      required: true,
+    },
+    mimeType: {
+      type: String,
+      required: true,
+    },
     size: {
       type: Number,
       required: true,
@@ -21,6 +24,6 @@ const fileSchema = new Schema(
   },
 );
 
-const Files = model("File", fileSchema);
+const FileModel = model("File", fileSchema);
 
-export { Files };
+export { FileModel };
