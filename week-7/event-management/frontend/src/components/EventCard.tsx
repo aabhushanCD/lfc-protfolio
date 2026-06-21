@@ -3,6 +3,7 @@ import { useAuth } from "../context/authContext";
 import { useState } from "react";
 import { useEventStore } from "../store/event.store";
 import Loading from "./Loading";
+import { EditEventModal } from "./EditEventModal";
 
 type CreatedBy = {
   _id: string;
@@ -22,20 +23,22 @@ type EventProp = {
   capacity: number;
   status: "draft" | "published";
   bannerUrl?: string | null;
+  venueImageKey: string;
 };
 
 const EventCard = (event: EventProp) => {
   const [showOption, setShowOption] = useState<boolean>(false);
+  const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const { publishEvent, deleteEvent, error, isLoading } = useEventStore();
-
   if (error) {
     <span className="text-red-800">{error}</span>;
   }
   if (isLoading) {
     <Loading></Loading>;
   }
+  console.log(event);
   return (
     <div className="w-80 rounded-xl overflow-hidden shadow-md border bg-white">
       {/* Banner */}
@@ -88,10 +91,19 @@ const EventCard = (event: EventProp) => {
               View Details
             </button>
           )}
+          {isEditOpen && (
+            <EditEventModal
+              event={event}
+              onClose={() => setIsEditOpen(false)}
+            />
+          )}
           <div className="relative">
             {currentUser?._id === event?.createdBy?._id && showOption && (
               <div className="flex flex-col items-start absolute  border p-1 rounded text-white bg-gray-500  -top-20 right-0">
-                <button className="hover:text-black hover:bg-gray-700 p-1 w-full rounded transition-colors">
+                <button
+                  onClick={() => setIsEditOpen((prev: boolean) => !prev)}
+                  className="hover:text-black hover:bg-gray-700 p-1 w-full rounded transition-colors"
+                >
                   Edit
                 </button>
                 {event.status === "draft" ? (

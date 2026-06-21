@@ -17,7 +17,7 @@ export const createEventSchema = z.object({
 export const updateEventSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
-  date: z.date().optional(),
+  date: z.string().optional(),
   venue: z.string().optional(),
   capacity: z.number().min(0).optional(),
   status: z.enum(["draft", "published"]),

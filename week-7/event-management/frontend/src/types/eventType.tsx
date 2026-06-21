@@ -1,10 +1,17 @@
+type CreatedBy = {
+  _id: string;
+  name: string;
+  email: string;
+};
+
 export interface EventType {
   _id: string;
   _v: string;
   updatedAt: string;
   createdAt: string;
-  createdBy: { _i: string; name: string; email: string };
-  venueImageKey:;
+  createdBy: CreatedBy;
+  venueImageKey: string;
+  venueImageUrl?:string;
   title: string;
   description: string;
   date: string;

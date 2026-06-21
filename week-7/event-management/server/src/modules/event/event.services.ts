@@ -4,6 +4,7 @@ import { getImageUrl } from "../../shared/storage/minio.services.ts";
 import { AppError } from "../../shared/utils/error.ts";
 import { uploadToMinio } from "../../shared/utils/uploadToMinio.ts";
 import { Event } from "./event.model.ts";
+import { transformEvent } from "./event.transform.ts";
 import { CreateEventDto } from "./schema/createEvent.schema.ts";
 import { UpdateEventDto } from "./schema/updateEvent.schema.ts";
 
@@ -23,26 +24,25 @@ export const createEvent = async (
     createdBy: organizerId,
   });
   await delCache("events");
+  await delCache("draft-event");
 
   return event;
 };
 
 export const getPublishedEvents = async () => {
-  const cached = await getCache("events");
-  if (cached) {
-    console.log("CACHED HIT");
-    return cached;
+  let events = await getCache("events");
+
+  if (!events) {
+    events = await Event.find({
+      status: "published",
+    })
+      .populate("createdBy", "name email")
+      .sort({ createdAt: -1 });
+
+    await setCache("events", events, 300);
   }
-  console.log("CACHED MISS");
-  const events = await Event.find({
-    status: "published",
-  })
-    .populate("createdBy", "name email")
-    .sort({ createdAt: -1 });
-
-  await setCache("events", events, 300);
-
-  return events;
+  const formatted = await Promise.all(events.map(transformEvent));
+  return formatted;
 };
 
 export const getEventById = async (id: any) => {
@@ -77,6 +77,7 @@ export const updateEvent = async (
 
   await event.save();
   await delCache("events");
+  await delCache("draft-event");
   return event;
 };
 
@@ -154,16 +155,16 @@ export const draftEvents = async (userId: string) => {
   if (!userId) {
     throw new AppError("Unauthorized", 400);
   }
-  const cached = await getCache("draft-event");
-  if (cached) {
-    console.log("CACHED HIT");
-    return cached;
+  let events = await getCache("draft-event");
+  if (!events) {
+    const events = await Event.find({ createdBy: userId, status: "draft" })
+      .populate("createdBy", "name email")
+      .sort({
+        createdAt: -1,
+      });
+    await setCache("draft-event", events, 300);
   }
-  const events = await Event.find({ createdBy: userId, status: "draft" })
-    .populate("createdBy", "name email")
-    .sort({
-      createdAt: -1,
-    });
-  await setCache("draft-event", events, 300);
-  return events;
+  const formatted = await Promise.all(events?.map(transformEvent));
+
+  return formatted;
 };

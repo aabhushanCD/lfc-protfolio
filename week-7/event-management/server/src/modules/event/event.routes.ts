@@ -1,6 +1,8 @@
 import express from "express";
 import {
+  confirmVenueImageUploadUrlController,
   createEventController,
+  createVenueImageUploadUrlController,
   deleteEventController,
   draftEventController,
   getEventByIdController,
@@ -31,13 +33,6 @@ router.post(
   createEventController,
 );
 
-router.put(
-  "/:id",
-  verifyToken,
-  validate(updateEventSchema),
-  updateEventController,
-);
-
 router.delete("/:id", verifyToken, deleteEventController);
 
 router.patch("/:id/publish", verifyToken, publishEventController);
@@ -49,4 +44,20 @@ router.post(
   uploadBannerController,
 );
 
+router.post(
+  "/:id/venue-image/upload-url",
+  verifyToken,
+  createVenueImageUploadUrlController,
+);
+router.patch(
+  "/:id/venue-image",
+  verifyToken,
+  confirmVenueImageUploadUrlController,
+);
+router.put(
+  "/:id",
+  verifyToken,
+  validate(updateEventSchema),
+  updateEventController,
+);
 export default router;

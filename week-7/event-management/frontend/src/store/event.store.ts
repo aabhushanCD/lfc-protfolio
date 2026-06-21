@@ -7,6 +7,7 @@ import type {
   // adjust if your schema exports the full event type under a different name
 } from "../schema/event.schema";
 import type { EventType } from "../types/eventType";
+import { getUploadUrl, minioConfirm, minioUpload } from "../api/media.api";
 
 interface EventState {
   events: EventType[];
@@ -24,6 +25,7 @@ interface EventActions {
   deleteEvent: (id: string) => Promise<boolean>;
   publishEvent: (id: string) => Promise<EventType | null>;
   uploadBanner: (id: string, data: FormData) => Promise<EventType | null>;
+  uploadVenueImage: (id: string, file: File) => Promise<EventType | null>;
   clearCurrentEvent: () => void;
   clearError: () => void;
   reset: () => void;
@@ -44,6 +46,10 @@ function getErrorMessage(err: unknown): string {
   }
   if (err instanceof Error) return err.message;
   return "Something went wrong";
+}
+
+function mergeEvent(list: EventType[], id: string, patch: Partial<EventType>) {
+  return list.map((e) => (e._id === id ? { ...e, ...patch } : e));
 }
 
 export const useEventStore = create<EventStore>()(
@@ -178,7 +184,38 @@ export const useEventStore = create<EventStore>()(
           return null;
         }
       },
+      uploadVenueImage: async (id, file) => {
+        set({ isLoading: true, error: null });
+        try {
+          // NOTE: assumes the response shape is { uploadUrl, objectKey }.
+          // Adjust the destructuring if your endpoint returns differently.
+          const { uploadUrl: presignedUrl, objectKey } = await getUploadUrl(
+            id,
+            file.type,
+          );
 
+          await minioUpload(presignedUrl, file);
+
+          // NOTE: assumes minioConfirm's response contains fields you want
+          // merged onto the event (e.g. a venueImageUrl). If it only returns
+          // a bare confirmation, you'll need a separate call to resolve a
+          // viewable URL from objectKey.
+          const updated = await minioConfirm(id, objectKey);
+
+          set((state) => ({
+            events: mergeEvent(state.events, id, updated),
+            currentEvent:
+              state.currentEvent && state.currentEvent._id === id
+                ? { ...state.currentEvent, ...updated }
+                : state.currentEvent,
+            isLoading: false,
+          }));
+          return updated;
+        } catch (err) {
+          set({ error: getErrorMessage(err), isLoading: false });
+          return null;
+        }
+      },
       clearCurrentEvent: () => set({ currentEvent: null }),
       clearError: () => set({ error: null }),
       reset: () => set(initialState),

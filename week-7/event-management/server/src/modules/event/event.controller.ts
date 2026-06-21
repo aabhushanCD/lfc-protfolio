@@ -11,6 +11,10 @@ import {
   draftEvents,
 } from "./event.services.ts";
 import { tryCatch } from "bullmq";
+import {
+  createVenueImageUploadUrl,
+  saveVenueImageKey,
+} from "../../shared/storage/minio.services.ts";
 
 export const createEventController = async (
   req: Request,
@@ -72,6 +76,7 @@ export const updateEventController = async (
   next: NextFunction,
 ) => {
   try {
+    console.log(req.params.id);
     const event = await updateEvent(req.params.id, req.body, req.user!.userId);
 
     res.status(200).json({
@@ -154,6 +159,37 @@ export const draftEventController = async (
     const id = req?.user?.userId;
     const events = await draftEvents(id);
     return res.status(200).json({ data: events, success: true });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createVenueImageUploadUrlController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const result = await createVenueImageUploadUrl(
+    req.params.id,
+    req.user.userId,
+    req.body.contentType,
+  );
+
+  res.status(200).json(result);
+};
+
+export const confirmVenueImageUploadUrlController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await saveVenueImageKey(
+      req.params.id,
+      req.user.userId,
+      req.body.objectKey,
+    );
+    res.status(200).json(result);
   } catch (error) {
     next(error);
   }
