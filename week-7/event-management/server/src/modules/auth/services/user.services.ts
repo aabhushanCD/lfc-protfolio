@@ -30,7 +30,7 @@ export const createUser = async ({ name, email, password }: CreateUserDto) => {
 export const getUser = async ({ email, password }: LoginUserDto) => {
   const cleanEmail = email.toLowerCase().trim();
   const user = await User.findOne({ email: cleanEmail });
-  console.log(user);
+  
   if (!user) {
     throw new AppError("User Doesn't exist", 401);
   }

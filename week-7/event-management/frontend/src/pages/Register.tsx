@@ -1,21 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {
-  RegisterSchema,
-  type RegisterSchemaType,
-} from "../schema/RegisterSchema";
-import { useAuth } from "../context/Auth.context";
-import { useNavigate } from "react-router";
+import { signupUserSchema, type SignupUserType } from "../schema/signup.schema";
+import { Link, useNavigate } from "react-router";
+import { useAuth } from "../context/authContext";
 
 const Register = () => {
   const { signup } = useAuth();
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterSchemaType>({
-    resolver: zodResolver(RegisterSchema),
+  } = useForm<SignupUserType>({
+    resolver: zodResolver(signupUserSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -23,7 +19,9 @@ const Register = () => {
     },
   });
 
-  const handleRegister = async (data: RegisterSchemaType) => {
+  const navigate = useNavigate();
+
+  const handleRegister = async (data: SignupUserType) => {
     await signup(data);
     navigate("/login");
   };
@@ -112,9 +110,9 @@ const Register = () => {
         {/* Footer */}
         <p className="text-sm text-center text-gray-500 mt-6">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
+          <Link to="/login" className="text-blue-600 hover:underline">
             Sign in
-          </a>
+          </Link>
         </p>
       </div>
     </div>

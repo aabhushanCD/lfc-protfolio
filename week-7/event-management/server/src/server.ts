@@ -6,12 +6,23 @@ import cookieParser from "cookie-parser";
 
 import connectDB from "./config/db.ts";
 import { authRoutes } from "./modules/auth/routes/auth.routes.ts";
-import eventRoute from "./modules/event/routes/event.routes.ts";
-import { Request, Response, NextFunction } from "express";
+import eventRoute from "./modules/event/event.routes.ts";
 import { errorHandler } from "./shared/utils/errorHandler.ts";
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      const allowedOrigins = ["http://localhost:5173"];
+      if (!origin || allowedOrigins.includes(origin)) {
+        cb(null, true);
+      } else {
+        cb(new Error("Not allowed by Cors"));
+      }
+    },
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(cookieParser());
 

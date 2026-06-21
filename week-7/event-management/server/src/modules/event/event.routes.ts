@@ -1,23 +1,23 @@
 import express from "express";
-
 import {
   createEventController,
-  getEventsController,
-  getEventByIdController,
-  updateEventController,
   deleteEventController,
+  draftEventController,
+  getEventByIdController,
+  getEventsController,
   publishEventController,
+  updateEventController,
   uploadBannerController,
-} from "../controller/event.controller.ts";
+} from "./event.controller.ts";
+import { verifyToken } from "../../shared/middleware/requiredAuth.middleware.ts";
+import { createEventSchema } from "./schema/createEvent.schema.ts";
+import { updateEventSchema } from "./schema/updateEvent.schema.ts";
 
-import { validate } from "../../../shared/middleware/validation.middleware.ts";
-import { verifyToken } from "../../../shared/middleware/requiredAuth.middleware.ts";
-import { upload } from "../../../shared/middleware/upload.middleware.ts";
-
-import { createEventSchema } from "../schema/createEvent.schema.ts";
-import { updateEventSchema } from "../schema/updateEvent.schema.ts";
+import { validate } from "../../shared/middleware/validation.middleware.ts";
+import { fileUpload } from "../../shared/middleware/upload.middleware.ts";
 
 const router = express.Router();
+router.get("/draft", verifyToken, draftEventController);
 
 router.get("/", getEventsController);
 router.get("/:id", getEventByIdController);
@@ -25,6 +25,8 @@ router.get("/:id", getEventByIdController);
 router.post(
   "/",
   verifyToken,
+
+  fileUpload.single("banner"),
   validate(createEventSchema),
   createEventController,
 );
@@ -43,7 +45,7 @@ router.patch("/:id/publish", verifyToken, publishEventController);
 router.post(
   "/:id/banner",
   verifyToken,
-  upload.single("banner"),
+  fileUpload.single("banner"),
   uploadBannerController,
 );
 

@@ -8,7 +8,9 @@ import {
   deleteEvent,
   publishEvent,
   uploadBanner,
-} from "../services/event.services.ts";
+  draftEvents,
+} from "./event.services.ts";
+import { tryCatch } from "bullmq";
 
 export const createEventController = async (
   req: Request,
@@ -16,7 +18,9 @@ export const createEventController = async (
   next: NextFunction,
 ) => {
   try {
-    const event = await createEvent(req.body, req.user!.userId);
+    const file = req.file as Express.Multer.File;
+
+    const event = await createEvent(req.body, req.user!.userId, file);
 
     res.status(201).json({
       success: true,
@@ -121,24 +125,35 @@ export const uploadBannerController = async (
   next: NextFunction,
 ) => {
   try {
-    if (!req.file) {
+    const file: Express.Multer.File = req.file;
+    if (!file) {
       return res.status(400).json({
         success: false,
         message: "Banner file is required",
       });
     }
 
-    const event = await uploadBanner(
-      req.params.id,
-      req.file.path,
-      req.user!.userId,
-    );
+    const event = await uploadBanner(req.params.id, file, req.user!.userId);
 
     res.status(200).json({
       success: true,
       message: "Banner uploaded successfully",
       data: event,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const draftEventController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const id = req?.user?.userId;
+    const events = await draftEvents(id);
+    return res.status(200).json({ data: events, success: true });
   } catch (error) {
     next(error);
   }

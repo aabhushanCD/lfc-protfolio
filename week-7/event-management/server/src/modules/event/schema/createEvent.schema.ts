@@ -14,7 +14,7 @@ export const createEventSchema = z.object({
 
   venue: z.string().trim().min(3, "Venue is required"),
 
-  capacity: z.number().int().positive("Capacity must be greater than 0"),
+  capacity: z.coerce.number().int().positive("Capacity must be greater than 0"),
 
   status: z.enum(["draft", "published"]).default("draft"),
 });
